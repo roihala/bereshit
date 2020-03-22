@@ -1,29 +1,26 @@
 import argparse
 import os
-import imp
 import pydoc
 import sys
 
-sys.path.append("C:\Users\RoiHa\PycharmProjects\dependencies")
-
-import src.analyzers as analyzers
-ANALYZERS_DIR = os.path.abspath(analyzers.__file__)
+PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(PROJECT_DIR)
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Example with non-optional arguments')
+    parser = argparse.ArgumentParser(description='Run analyzers here')
 
     parser.add_argument('catalog', type=str)
 
     catalog = parser.parse_args().catalog
-    run_analyzer(os.path.splitext(catalog)[0])
+    get_analyzer(os.path.splitext(catalog)[0]).run()
 
 
-def run_analyzer(analyzer_name):
+def get_analyzer(analyzer_name):
     args = 'src.analyzers.{analyzer_name}.{analyzer_class}'.format(
         analyzer_name=analyzer_name,
         analyzer_class=analyzer_name)
-    return  pydoc.locate(args)
+    return  pydoc.locate(args)()
 
 
 if __name__ == '__main__':
